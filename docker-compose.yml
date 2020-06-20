@@ -1,0 +1,16 @@
+version: '3.8'
+services:
+  prometheus:
+    image: prom/prometheus:v2.19.1
+    ports:
+      - 9090:9090
+    volumes:
+      - ./docker/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+  grafana:
+    image: grafana/grafana:7.0.3
+    ports:
+      - 3000:3000
+    volumes:
+      - ./docker/grafana/prometheus.yml:/etc/grafana/provisioning/datasources/prometheus.yml:ro
+      - ./docker/grafana/dashboards.yml:/etc/grafana/provisioning/dashboards/dashboards.yml:ro
+      - ./docker/grafana/aeron-game.json:/var/lib/grafana/dashboards/aeron-game.json:ro
