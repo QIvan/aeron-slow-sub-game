@@ -14,7 +14,7 @@ import java.util.stream.Stream;
 
 public class Settings
 {
-    public static final String AERON_DIRECTORY_NAME = CommonContext.getAeronDirectoryName() + "-publisher";
+    public static final String AERON_DIRECTORY_NAME = CommonContext.getAeronDirectoryName();
     public static final String SETTINGS_FILE_NAME = "subscriber-settings.json";
     public static final Path PATH_TO_SETTINGS = Paths.get(AERON_DIRECTORY_NAME).resolve(SETTINGS_FILE_NAME);
 

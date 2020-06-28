@@ -14,8 +14,9 @@
   },
   "editable": true,
   "gnetId": null,
-  "graphTooltip": 0,
-  "id": 1,
+  "graphTooltip": 1,
+  "id": 2,
+  "iteration": 1593352474235,
   "links": [],
   "panels": [
     {
@@ -39,7 +40,7 @@
         "y": 0
       },
       "hiddenSeries": false,
-      "id": 2,
+      "id": 8,
       "interval": "1s",
       "legend": {
         "avg": false,
@@ -60,34 +61,25 @@
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
-      "seriesOverrides": [
-        {
-          "alias": "Bytes received",
-          "transform": "negative-Y"
-        }
-      ],
+      "seriesOverrides": [],
       "spaceLength": 10,
       "stack": false,
       "steppedLine": false,
       "targets": [
         {
-          "expr": "rate(aeron_total{label=\"Bytes sent\"}[5s])",
-          "interval": "1s",
-          "legendFormat": "{{label}}",
+          "expr": "aeron_receiver_high_water_mark{channel=\"$channel\", session_id=\"$session_id\", stream_id=\"$stream_id\"}",
+          "hide": false,
+          "instant": false,
+          "interval": "",
+          "legendFormat": "{{ registration_id }}",
           "refId": "A"
-        },
-        {
-          "expr": "rate(aeron_total{label=\"Bytes received\"}[5s])",
-          "interval": "1s",
-          "legendFormat": "{{label}}",
-          "refId": "B"
         }
       ],
       "thresholds": [],
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "Bytes",
+      "title": "Receiver High Watermark",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -104,8 +96,8 @@
       },
       "yaxes": [
         {
-          "format": "Bps",
-          "label": "← received     sent →",
+          "format": "short",
+          "label": "",
           "logBase": 1,
           "max": null,
           "min": null,
@@ -146,7 +138,7 @@
         "y": 0
       },
       "hiddenSeries": false,
-      "id": 3,
+      "id": 10,
       "interval": "1s",
       "legend": {
         "avg": false,
@@ -167,34 +159,25 @@
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
-      "seriesOverrides": [
-        {
-          "alias": "/.*received.*/",
-          "transform": "negative-Y"
-        }
-      ],
+      "seriesOverrides": [],
       "spaceLength": 10,
       "stack": false,
       "steppedLine": false,
       "targets": [
         {
-          "expr": "rate(aeron_total{label=\"NAKs sent\"}[5s])",
+          "expr": "aeron_subscriber_backlog{channel=\"$channel\", session_id=\"$session_id\", stream_id=\"$stream_id\"}",
+          "hide": false,
+          "instant": false,
           "interval": "",
-          "legendFormat": "{{label}}",
+          "legendFormat": "{{ registration_id }}",
           "refId": "A"
-        },
-        {
-          "expr": "rate(aeron_total{label=\"NAKs received\"}[5s])",
-          "interval": "",
-          "legendFormat": "{{label}}",
-          "refId": "B"
         }
       ],
       "thresholds": [],
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "NAKs",
+      "title": "Subscriber Backlog",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -211,8 +194,8 @@
       },
       "yaxes": [
         {
-          "format": "ops",
-          "label": "← received     sent →",
+          "format": "short",
+          "label": "",
           "logBase": 1,
           "max": null,
           "min": null,
@@ -253,7 +236,7 @@
         "y": 0
       },
       "hiddenSeries": false,
-      "id": 4,
+      "id": 7,
       "interval": "1s",
       "legend": {
         "avg": false,
@@ -274,34 +257,25 @@
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
-      "seriesOverrides": [
-        {
-          "alias": "/.*received.*/",
-          "transform": "negative-Y"
-        }
-      ],
+      "seriesOverrides": [],
       "spaceLength": 10,
       "stack": false,
       "steppedLine": false,
       "targets": [
         {
-          "expr": "rate(aeron_total{label=\"Status Messages sent\"}[5s])",
-          "interval": "1s",
-          "legendFormat": "{{label}}",
+          "expr": "aeron_publisher_remaining_window{channel=\"$channel\", session_id=\"$session_id\", stream_id=\"$stream_id\"}",
+          "hide": false,
+          "instant": false,
+          "interval": "",
+          "legendFormat": "{{ registration_id }}",
           "refId": "A"
-        },
-        {
-          "expr": "rate(aeron_total{label=\"Status Messages received\"}[5s])",
-          "interval": "1s",
-          "legendFormat": "{{label}}",
-          "refId": "B"
         }
       ],
       "thresholds": [],
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "Status messages",
+      "title": "Publisher Remaining Window",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -317,116 +291,9 @@
         "values": []
       },
       "yaxes": [
-        {
-          "format": "ops",
-          "label": "← received     sent →",
-          "logBase": 1,
-          "max": null,
-          "min": null,
-          "show": true
-        },
         {
           "format": "short",
-          "label": null,
-          "logBase": 1,
-          "max": null,
-          "min": null,
-          "show": true
-        }
-      ],
-      "yaxis": {
-        "align": false,
-        "alignLevel": null
-      }
-    },
-    {
-      "aliasColors": {},
-      "bars": false,
-      "dashLength": 10,
-      "dashes": false,
-      "datasource": "prometheus",
-      "fieldConfig": {
-        "defaults": {
-          "custom": {}
-        },
-        "overrides": []
-      },
-      "fill": 0,
-      "fillGradient": 0,
-      "gridPos": {
-        "h": 9,
-        "w": 6,
-        "x": 18,
-        "y": 0
-      },
-      "hiddenSeries": false,
-      "id": 5,
-      "interval": "1s",
-      "legend": {
-        "avg": false,
-        "current": false,
-        "max": false,
-        "min": false,
-        "show": false,
-        "total": false,
-        "values": false
-      },
-      "lines": true,
-      "linewidth": 1,
-      "nullPointMode": "null",
-      "options": {
-        "dataLinks": []
-      },
-      "percentage": false,
-      "pointradius": 2,
-      "points": false,
-      "renderer": "flot",
-      "seriesOverrides": [
-        {
-          "alias": "/.*received.*/",
-          "transform": "negative-Y"
-        }
-      ],
-      "spaceLength": 10,
-      "stack": false,
-      "steppedLine": false,
-      "targets": [
-        {
-          "expr": "rate(aeron_total{label=\"Heartbeats sent\"}[5s])",
-          "interval": "",
-          "legendFormat": "{{label}}",
-          "refId": "A"
-        },
-        {
-          "expr": "rate(aeron_total{label=\"Heartbeats received\"}[5s])",
-          "interval": "",
-          "legendFormat": "{{label}}",
-          "refId": "B"
-        }
-      ],
-      "thresholds": [],
-      "timeFrom": null,
-      "timeRegions": [],
-      "timeShift": null,
-      "title": "Heartbeats",
-      "tooltip": {
-        "shared": true,
-        "sort": 0,
-        "value_type": "individual"
-      },
-      "transparent": true,
-      "type": "graph",
-      "xaxis": {
-        "buckets": null,
-        "mode": "time",
-        "name": null,
-        "show": true,
-        "values": []
-      },
-      "yaxes": [
-        {
-          "format": "ops",
-          "label": "← received     sent →",
+          "label": "",
           "logBase": 1,
           "max": null,
           "min": null,
@@ -467,6 +334,202 @@
         "y": 9
       },
       "hiddenSeries": false,
+      "id": 9,
+      "interval": "1s",
+      "legend": {
+        "avg": false,
+        "current": false,
+        "max": false,
+        "min": false,
+        "show": false,
+        "total": false,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 1,
+      "nullPointMode": "null",
+      "options": {
+        "dataLinks": []
+      },
+      "percentage": false,
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "expr": "aeron_sender_window{channel=\"$channel\", session_id=\"$session_id\", stream_id=\"$stream_id\"}",
+          "hide": false,
+          "instant": false,
+          "interval": "",
+          "legendFormat": "{{ registration_id }}",
+          "refId": "A"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "Sender Window",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "transparent": true,
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "short",
+          "label": "",
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "prometheus",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
+      },
+      "fill": 0,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 9,
+        "w": 6,
+        "x": 6,
+        "y": 9
+      },
+      "hiddenSeries": false,
+      "id": 11,
+      "interval": "1s",
+      "legend": {
+        "avg": false,
+        "current": false,
+        "max": false,
+        "min": false,
+        "show": false,
+        "total": false,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 1,
+      "nullPointMode": "null",
+      "options": {
+        "dataLinks": []
+      },
+      "percentage": false,
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "expr": "aeron_publisher_limit{channel=\"$channel\", session_id=\"$session_id\", stream_id=\"$stream_id\"}",
+          "hide": false,
+          "instant": false,
+          "interval": "",
+          "legendFormat": "{{ registration_id }}",
+          "refId": "A"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "Publisher Limit",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "transparent": true,
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "short",
+          "label": "",
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "prometheus",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
+      },
+      "fill": 0,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 9,
+        "w": 6,
+        "x": 13,
+        "y": 9
+      },
+      "hiddenSeries": false,
       "id": 6,
       "interval": "1s",
       "legend": {
@@ -494,28 +557,16 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "aeron_total{label=\"pub-pos (sampled): 1 2098035903 1 aeron:udp?endpoint=224.1.1.1:1234\"}",
+          "expr": "aeron_sender_position{channel=\"$channel\", session_id=\"$session_id\", stream_id=\"$stream_id\"}",
           "interval": "1s",
-          "legendFormat": "{{label}}",
+          "legendFormat": "sender {{ registration_id }}",
           "refId": "A"
         },
         {
-          "expr": "aeron_total{label=\"sub-pos: 3 2098035903 1 aeron:udp?endpoint=224.1.1.1:1234 @0\"}",
+          "expr": "aeron_receiver_position{channel=\"$channel\", session_id=\"$session_id\", stream_id=\"$stream_id\"}",
           "interval": "1s",
-          "legendFormat": "{{label}}",
+          "legendFormat": "receiver {{ registration_id }}",
           "refId": "B"
-        },
-        {
-          "expr": "aeron_total{label=\"sub-pos: 6 2098035903 1 aeron:udp?endpoint=224.1.1.1:1234 @241632\"}",
-          "interval": "1s",
-          "legendFormat": "{{label}}",
-          "refId": "C"
-        },
-        {
-          "expr": "aeron_total{label=\"sub-pos: 9 2098035903 1 aeron:udp?endpoint=224.1.1.1:1234 @57729504\"}",
-          "interval": "1s",
-          "legendFormat": "{{label}}",
-          "refId": "D"
         }
       ],
       "thresholds": [],
@@ -559,224 +610,160 @@
         "align": false,
         "alignLevel": null
       }
-    },
-    {
-      "aliasColors": {},
-      "bars": false,
-      "dashLength": 10,
-      "dashes": false,
-      "datasource": "prometheus",
-      "fieldConfig": {
-        "defaults": {
-          "custom": {}
-        },
-        "overrides": []
-      },
-      "fill": 0,
-      "fillGradient": 0,
-      "gridPos": {
-        "h": 9,
-        "w": 6,
-        "x": 6,
-        "y": 9
-      },
-      "hiddenSeries": false,
-      "id": 7,
-      "interval": "1s",
-      "legend": {
-        "avg": false,
-        "current": false,
-        "max": false,
-        "min": false,
-        "show": false,
-        "total": false,
-        "values": false
-      },
-      "lines": true,
-      "linewidth": 1,
-      "nullPointMode": "null",
-      "options": {
-        "dataLinks": []
-      },
-      "percentage": false,
-      "pointradius": 2,
-      "points": false,
-      "renderer": "flot",
-      "seriesOverrides": [],
-      "spaceLength": 10,
-      "stack": false,
-      "steppedLine": false,
-      "targets": [
-        {
-          "expr": "label_replace(aeron_total{label=\"sub-pos: 6 2098035903 1 aeron:udp?endpoint=224.1.1.1:1234 @241632\"}, \"label\", \"pos lag slow-fast\", \"label\", \".*\")\n-\nlabel_replace(aeron_total{label=\"sub-pos: 3 2098035903 1 aeron:udp?endpoint=224.1.1.1:1234 @0\"}, \"label\", \"pos lag slow-fast\", \"label\", \".*\")",
-          "hide": false,
-          "instant": false,
-          "interval": "",
-          "legendFormat": "{{label}}",
-          "refId": "A"
-        },
-        {
-          "expr": "label_replace(aeron_total{label=\"pub-pos (sampled): 1 2098035903 1 aeron:udp?endpoint=224.1.1.1:1234\"}, \"label\", \"pos lag slow\", \"label\", \".*\")\n-\nlabel_replace(aeron_total{label=\"sub-pos: 6 2098035903 1 aeron:udp?endpoint=224.1.1.1:1234 @241632\"}, \"label\", \"pos lag slow\", \"label\", \".*\")",
-          "hide": true,
-          "interval": "",
-          "legendFormat": "{{label}}",
-          "refId": "C"
-        }
-      ],
-      "thresholds": [],
-      "timeFrom": null,
-      "timeRegions": [],
-      "timeShift": null,
-      "title": "Positions lags",
-      "tooltip": {
-        "shared": true,
-        "sort": 0,
-        "value_type": "individual"
-      },
-      "transparent": true,
-      "type": "graph",
-      "xaxis": {
-        "buckets": null,
-        "mode": "time",
-        "name": null,
-        "show": true,
-        "values": []
-      },
-      "yaxes": [
-        {
-          "format": "short",
-          "label": "",
-          "logBase": 1,
-          "max": null,
-          "min": null,
-          "show": true
-        },
-        {
-          "format": "short",
-          "label": null,
-          "logBase": 1,
-          "max": null,
-          "min": null,
-          "show": true
-        }
-      ],
-      "yaxis": {
-        "align": false,
-        "alignLevel": null
-      }
-    },
-    {
-      "datasource": "prometheus",
-      "fieldConfig": {
-        "defaults": {
-          "custom": {},
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "#EAB839",
-                "value": 60000
-              }
-            ]
-          },
-          "unit": "ms"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 5,
-        "w": 12,
-        "x": 12,
-        "y": 9
-      },
-      "id": 8,
-      "interval": "1s",
-      "options": {
-        "colorMode": "value",
-        "graphMode": "area",
-        "justifyMode": "auto",
-        "orientation": "auto",
-        "reduceOptions": {
-          "calcs": [
-            "last"
-          ],
-          "fields": "",
-          "values": false
-        }
-      },
-      "pluginVersion": "7.0.3",
-      "targets": [
-        {
-          "expr": "1000 * time() - aeron_total{label=\"client-heartbeat: 0\"}",
-          "hide": false,
-          "instant": true,
-          "interval": "",
-          "legendFormat": "{{label}}",
-          "refId": "A"
-        },
-        {
-          "expr": "1000 * time() - aeron_total{label=\"client-heartbeat: 2\"}",
-          "hide": false,
-          "instant": true,
-          "interval": "",
-          "legendFormat": "{{label}}",
-          "refId": "B"
-        },
-        {
-          "expr": "1000 * time() -aeron_total{label=\"client-heartbeat: 5\"}",
-          "hide": false,
-          "instant": true,
-          "interval": "",
-          "legendFormat": "{{label}}",
-          "refId": "C"
-        },
-        {
-          "expr": "1000 * time() -aeron_total{label=\"client-heartbeat: 10\"}",
-          "hide": false,
-          "instant": true,
-          "interval": "",
-          "legendFormat": "{{label}}",
-          "refId": "D"
-        }
-      ],
-      "timeFrom": null,
-      "timeShift": null,
-      "title": "Last Heartbeat Time",
-      "transparent": true,
-      "type": "stat"
     }
   ],
-  "refresh": "5s",
+  "refresh": false,
   "schemaVersion": 25,
   "style": "dark",
   "tags": [],
   "templating": {
-    "list": []
+    "list": [
+      {
+        "allValue": null,
+        "current": {
+          "selected": false,
+          "text": "aeron:udp?endpoint=224.1.1.1:1234",
+          "value": "aeron:udp?endpoint=224.1.1.1:1234"
+        },
+        "datasource": "prometheus",
+        "definition": "label_values(aeron_sender_position, channel)",
+        "hide": 0,
+        "includeAll": false,
+        "label": null,
+        "multi": false,
+        "name": "channel",
+        "options": [],
+        "query": "label_values(aeron_sender_position, channel)",
+        "refresh": 2,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 1,
+        "tagValuesQuery": "",
+        "tags": [],
+        "tagsQuery": "",
+        "type": "query",
+        "useTags": false
+      },
+      {
+        "allValue": null,
+        "current": {
+          "selected": false,
+          "text": "855115751",
+          "value": "855115751"
+        },
+        "datasource": "prometheus",
+        "definition": "label_values(aeron_sender_position{channel=\"$channel\"}, session_id)",
+        "hide": 0,
+        "includeAll": false,
+        "label": null,
+        "multi": false,
+        "name": "session_id",
+        "options": [],
+        "query": "label_values(aeron_sender_position{channel=\"$channel\"}, session_id)",
+        "refresh": 2,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "tagValuesQuery": "",
+        "tags": [],
+        "tagsQuery": "",
+        "type": "query",
+        "useTags": false
+      },
+      {
+        "allValue": null,
+        "current": {
+          "selected": false,
+          "text": "1",
+          "value": "1"
+        },
+        "datasource": "prometheus",
+        "definition": "label_values(aeron_sender_position{channel=\"$channel\", session_id=\"$session_id\"}, stream_id)",
+        "hide": 0,
+        "includeAll": false,
+        "label": null,
+        "multi": false,
+        "name": "stream_id",
+        "options": [],
+        "query": "label_values(aeron_sender_position{channel=\"$channel\", session_id=\"$session_id\"}, stream_id)",
+        "refresh": 2,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "tagValuesQuery": "",
+        "tags": [],
+        "tagsQuery": "",
+        "type": "query",
+        "useTags": false
+      },
+      {
+        "allValue": null,
+        "current": {
+          "selected": false,
+          "text": "1",
+          "value": "1"
+        },
+        "datasource": "prometheus",
+        "definition": "label_values(aeron_sender_position{channel=\"$channel\", session_id=\"$session_id\", stream_id=\"$stream_id\"}, registration_id)",
+        "hide": 0,
+        "includeAll": false,
+        "label": null,
+        "multi": false,
+        "name": "sender_registration_id",
+        "options": [],
+        "query": "label_values(aeron_sender_position{channel=\"$channel\", session_id=\"$session_id\", stream_id=\"$stream_id\"}, registration_id)",
+        "refresh": 2,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "tagValuesQuery": "",
+        "tags": [],
+        "tagsQuery": "",
+        "type": "query",
+        "useTags": false
+      },
+      {
+        "allValue": null,
+        "current": {
+          "selected": true,
+          "text": "All",
+          "value": [
+            "$__all"
+          ]
+        },
+        "datasource": "prometheus",
+        "definition": "label_values(aeron_receiver_position{channel=\"$channel\", session_id=\"$session_id\", stream_id=\"$stream_id\"}, registration_id)",
+        "hide": 0,
+        "includeAll": true,
+        "label": null,
+        "multi": true,
+        "name": "receiver_registration_id",
+        "options": [],
+        "query": "label_values(aeron_receiver_position{channel=\"$channel\", session_id=\"$session_id\", stream_id=\"$stream_id\"}, registration_id)",
+        "refresh": 2,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 1,
+        "tagValuesQuery": "",
+        "tags": [],
+        "tagsQuery": "",
+        "type": "query",
+        "useTags": false
+      }
+    ]
   },
   "time": {
-    "from": "now-5m",
-    "to": "now"
+    "from": "2020-06-28T13:55:46.041Z",
+    "to": "2020-06-28T14:02:55.892Z"
   },
   "timepicker": {
     "refresh_intervals": [
-      "10s",
       "30s",
-      "1m",
-      "5m",
-      "15m",
-      "30m",
-      "1h",
-      "2h",
-      "1d"
+      "1m"
     ]
   },
   "timezone": "",
-  "title": "Aeron game",
-  "uid": "UVCCN5ZMk",
-  "version": 5
+  "title": "Aeron game Improved",
+  "uid": "u-LcHRMGz",
+  "version": 6
 }

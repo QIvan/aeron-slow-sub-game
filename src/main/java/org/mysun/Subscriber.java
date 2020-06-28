@@ -1,5 +1,7 @@
 package org.mysun;
 
+import static org.mysun.Settings.AERON_DIRECTORY_NAME;
+
 import io.aeron.Aeron;
 import io.aeron.ChannelUri;
 import io.aeron.CommonContext;
