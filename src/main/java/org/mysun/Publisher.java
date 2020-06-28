@@ -3,13 +3,12 @@ package org.mysun;
 import io.aeron.Aeron;
 import io.aeron.Publication;
 import io.aeron.driver.MediaDriver;
-import org.agrona.concurrent.IdleStrategy;
-import org.agrona.concurrent.SigInt;
-import org.agrona.concurrent.SleepingMillisIdleStrategy;
-import org.agrona.concurrent.UnsafeBuffer;
+import io.aeron.driver.ThreadingMode;
+import org.agrona.concurrent.*;
 import org.agrona.console.ContinueBarrier;
 
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static org.mysun.Settings.AERON_DIRECTORY_NAME;
@@ -28,7 +27,7 @@ public class Publisher implements Runnable
     @Override
     public void run()
     {
-            final IdleStrategy idleStrategy = new SleepingMillisIdleStrategy(1000);
+            final IdleStrategy idleStrategy = new SleepingIdleStrategy(TimeUnit.MILLISECONDS.toNanos(1));
             while (!publication.isConnected() && isRunning.get())
             {
                 idleStrategy.idle();
@@ -45,6 +44,10 @@ public class Publisher implements Runnable
                 if (offer == Publication.NOT_CONNECTED)
                 {
                     break;
+                }
+                if (offer == Publication.BACK_PRESSURED)
+                {
+                    idleStrategy.idle();
                 }
 //                System.out.println(offer);
 //                idleStrategy.idle();
@@ -63,6 +66,8 @@ public class Publisher implements Runnable
             final MediaDriver ignored = MediaDriver.launch(
                 new MediaDriver.Context()
                     .aeronDirectoryName(AERON_DIRECTORY_NAME)
+                    .threadingMode(ThreadingMode.SHARED)
+                    .sharedIdleStrategy(new SleepingMillisIdleStrategy(1))
                     .dirDeleteOnShutdown(true)
                     .dirDeleteOnStart(true));
             final Aeron aeron = Aeron.connect(new Aeron.Context().aeronDirectoryName(AERON_DIRECTORY_NAME));

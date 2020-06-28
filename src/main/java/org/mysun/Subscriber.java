@@ -1,14 +1,19 @@
 package org.mysun;
 
 import io.aeron.Aeron;
+import io.aeron.ChannelUri;
+import io.aeron.CommonContext;
 import io.aeron.Subscription;
 import io.aeron.logbuffer.FragmentHandler;
 import org.agrona.collections.MutableLong;
+import org.agrona.concurrent.IdleStrategy;
 import org.agrona.concurrent.SigInt;
+import org.agrona.concurrent.SleepingIdleStrategy;
 import org.agrona.concurrent.SleepingMillisIdleStrategy;
 
 import java.util.Scanner;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Subscriber implements Runnable
@@ -26,11 +31,11 @@ public class Subscriber implements Runnable
     }
 
 
-
     @Override
     public void run()
     {
-        final SleepingMillisIdleStrategy idleStrategy = new SleepingMillisIdleStrategy(100);
+        final IdleStrategy idleStrategy = new SleepingIdleStrategy(
+            mySpeed == Settings.Speed.SLOW ? 100 : TimeUnit.MILLISECONDS.toNanos(100));
 
         final MutableLong time = new MutableLong(-1);
         final FragmentHandler fragmentHandler = (buf, offset, length, header) -> time.set(buf.getLong(offset));
@@ -42,11 +47,8 @@ public class Subscriber implements Runnable
             {
                 subscription.poll(fragmentHandler, 16);
             }
+            idleStrategy.idle();
 //            System.out.println("time " + time.get());
-            if (mySpeed == Settings.Speed.SLOW)
-            {
-                idleStrategy.idle();
-            }
         }
     }
 
@@ -69,7 +71,9 @@ public class Subscriber implements Runnable
         System.out.println("Connect to the Aeron...");
         try (
             final Aeron aeron = Aeron.connect(new Aeron.Context().aeronDirectoryName(Settings.AERON_DIRECTORY_NAME));
-            final Subscription subscription = aeron.addSubscription(settings.getChannel(), settings.getStreamId());)
+            final Subscription subscription = aeron.addSubscription(
+                createChannel(settings.getChannel(), currentNumber),
+                settings.getStreamId());)
         {
             final CompletableFuture<Void> subscriberTask = CompletableFuture.runAsync(
                 new Subscriber(subscription, mySpeed, isRunning)
@@ -84,7 +88,8 @@ public class Subscriber implements Runnable
             if (answer == (mySpeed == Settings.Speed.SLOW))
             {
                 System.out.println("You won!");
-            } else
+            }
+            else
             {
                 System.out.println("Nooooo!!!");
                 System.out.println("My number is " + currentNumber);
@@ -95,4 +100,12 @@ public class Subscriber implements Runnable
             subscriberTask.get();
         }
     }
+
+    private static String createChannel(String channel, int currentNumber)
+    {
+        ChannelUri uri = ChannelUri.parse(channel);
+        uri.put(CommonContext.ALIAS_PARAM_NAME, String.valueOf(currentNumber));
+        return uri.toString();
+    }
+
 }
